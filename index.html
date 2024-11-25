@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Sentiment Analysis</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            color: #212529;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #495057;
+            font-size: 16px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        .card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 22px;
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #007bff;
+            color: #ffffff;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        .footer-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            main {
+                padding: 15px;
+            }
+
+            header {
+                font-size: 22px;
+            }
+
+            input, select, button {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .card h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+    <script>
+        // JavaScript to toggle sections based on user selection
+        function toggleSections() {
+            const option = document.getElementById('option').value;
+            const tickerSection = document.getElementById('ticker-section');
+            const headlineSection = document.getElementById('headline-section');
+
+            if (option === 'ticker') {
+                tickerSection.classList.remove('hidden');
+                headlineSection.classList.add('hidden');
+            } else if (option === 'headline') {
+                headlineSection.classList.remove('hidden');
+                tickerSection.classList.add('hidden');
+            } else {
+                tickerSection.classList.add('hidden');
+                headlineSection.classList.add('hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        Stock Sentiment Analysis
+    </header>
+    <main>
+        <form method="POST">
+            <div class="section">
+                <label for="option">Choose an Option:</label>
+                <select id="option" name="option" required onchange="toggleSections()">
+                    <option value="">Select an Option</option>
+                    <option value="ticker">Check Sentiment Analysis of a Ticker</option>
+                    <option value="headline">Enter a Headline to Check Sentiment</option>
+                </select>
+            </div>
+
+            <div id="ticker-section" class="section hidden">
+                <label for="ticker">Enter Stock Ticker:</label>
+                <input type="text" id="ticker" name="ticker" placeholder="e.g., AAPL">
+            </div>
+
+            <div id="headline-section" class="section hidden">
+                <label for="headline">Enter Headline:</label>
+                <input type="text" id="headline" name="headline" placeholder="e.g., Apple launches new iPhone">
+            </div>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        {% if graph %}
+        <div class="card">
+            <h2>Generated Graph</h2>
+            <img src="data:image/png;base64,{{ graph }}" alt="Generated Graph">
+        </div>
+        {% endif %}
+
+        {% if prediction %}
+        <div class="card">
+            <h2>Prediction</h2>
+            <p>{{ prediction }}</p>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2024 <a href="#" class="footer-link">Stock Sentiment Analysis</a>. All rights reserved.</p>
+    </footer>
+</body>
+</html>
